@@ -1,0 +1,612 @@
+﻿@model ValueTuple<BulbaClone.Models.Pokemon, BulbaClone.Models.Form, BulbaClone.Models.Pokemon, BulbaClone.Models.Pokemon>
+
+
+@{
+    var pokemon = Model.Item1;
+    var form = Model.Item2;
+    var previousPokemon = Model.Item3;
+    var subsequentPokemon = Model.Item4;
+}
+
+
+
+@{
+    var backColour = "#" + form.Type1.BaseHexColour;
+    var frontColour = "#" + form.Type1.ComplementaryHexColour;
+}
+
+<div>
+
+    @{
+        var count = 0;
+        var veiwableFormsCount = 0;
+    }
+
+
+    @foreach(var alternateForm in pokemon.Forms) {
+        if(alternateForm.isDisplayed == true) {
+            veiwableFormsCount = veiwableFormsCount+1;
+        }
+    }
+
+    @{var translate = "-4.3vw";}
+    @if(veiwableFormsCount <= 1) {
+        translate = "0vw";
+    }
+
+    <div class="flex-container" style="display: flex; flex-direction: row;   transform: translateX(@(translate)); ">
+        <div style="display: flex; justify-content: center; align-items: start;">
+            <div class=" flex-container" style=" display: flex; flex-direction: column; padding-top: 9px;">
+
+                @if (veiwableFormsCount > 1)
+                {
+
+                @foreach (var alternateForm in pokemon.Forms)
+                {
+                @if(alternateForm.isDisplayed == true) {
+                    <div class="box-outer" style="background-color: @(backColour);  border-top-right-radius: 0px; border-bottom-right-radius: 0px; flex: 1; border-right: 0px solid;">
+                        <div class="box-middle" style="background-color:  @(frontColour);  border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+                                <a href="/Pokemons/Forms/@(pokemon.Id)/@(count)" style="color: inherit; text-decoration: none;">
+                                    <div>
+                                        @{
+                                            var (altFormpokemonNum, altFormformNum, altFormgenderCode, altFormbackupGenderCode, altFormgigantamax) = CommonMethodsHelper.GetImageInput(pokemon, alternateForm);
+                                        }
+
+                                        <img src="~/images/pokemon_images/poke_capture_@(altFormpokemonNum)_@(altFormformNum)_@(altFormgenderCode)_@(altFormgigantamax)_00000000_f_n.png"
+                                        alt="type"
+                                        style="width: 4vw;"
+                                        onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(altFormpokemonNum)_@(altFormformNum)_@(altFormbackupGenderCode)_@(altFormgigantamax)_00000000_f_n.png';" />
+                                    </div>
+                                </a>
+                        </div>
+                    </div>
+                    }
+                count = count + 1;
+                }
+                }
+            </div>
+        </div>
+
+
+
+
+
+
+
+    <div class="flex-container" style="display: flex; flex-direction: column; width: 50%; ">
+
+    
+        <div class="box-outer" style="background-color: @(backColour);">
+
+            <div class="box-middle" style="background-color: @(frontColour); display: flex; flex-grow: 1;">
+                <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: row; width: 95%;">
+                    @if (previousPokemon != null)
+                    {
+                        
+                    <a href="/Pokemons/Forms/@(pokemon.Id - 1)/0" style="color: inherit; text-decoration: none;">
+                        <i>←@(previousPokemon.Name)&nbsp;</i>
+                    </a>
+
+                    }
+
+
+                    <span style="justify-content: center; flex-grow: 1;  flex-direction: row;">
+                        @{
+                            var (pokemonNum, formNum, genderCode, backupGenderCode, gigantamax) = CommonMethodsHelper.GetImageInput(pokemon, form);
+                        }
+
+                        <div style="display: block; justify-content: center; display: inline-block; display: flex; flex-grow: 1;">
+                            <b>
+                                @(form.Name)
+      
+                            </b>
+                        &nbsp; #<i>@(pokemonNum) </i>
+
+                        </div>
+
+
+
+                    </span>
+
+                    @if(subsequentPokemon != null) {
+
+                    <a href="/Pokemons/Forms/@(pokemon.Id + 1)/0" style="color: inherit; text-decoration: none;">
+                        <i>&nbsp;@(subsequentPokemon.Name)→</i>
+                    </a>
+                    }
+            </div>
+
+
+            <div class="box-inner" style="background-color: #FFFFFF; margin-top: 4px; ">
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                <img src="~/images/pokemon_images/poke_capture_@(pokemonNum)_@(formNum)_@(genderCode)_@(gigantamax)_00000000_f_n.png"
+                alt="type"
+                style="width: 45%; height: auto;"
+                    onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(pokemonNum)_@(formNum)_@(backupGenderCode)_@(gigantamax)_00000000_f_n.png';" />
+                
+                </div>
+            </div>
+        </div>
+
+
+            <div style="padding: 3px;"></div>
+
+            <div class="box-middle" style="background-color: @(frontColour); ">
+
+                <span style="display: block;"><b>Type</b></span>
+
+                <div class="box-inner" style="background-color: #FFFFFF; ">
+
+                    <a href="/Pokemons/index/@(form.Type1.Name)" style="width: 20%; height: auto;">
+                        <img src="~/images/type_images/@(form.Type1.Name).svg" alt="type"
+                                style="width: 100%;" />
+                    </a>
+                    @if (form.Type2 is not null)
+                    {
+                        <div style="padding-right: 2%;"></div>
+                        <a href="/Pokemons/index/@(form.Type2.Name)" style="width: 20%; height: auto;">
+                            <img src = "~/images/type_images/@(form.Type2.Name).svg" alt = "type"
+                                    style="width: 100%;" />
+                        </a>
+                    }
+
+                </div>
+            </div>
+
+
+            <div style="padding: 3px;"></div>
+
+            <div class="box-middle" style="background-color: @(frontColour); ">
+                <span style="display: block;">
+                    <b> 
+                        @if(form.ability1 == null && form.hiddenAbility == null){
+                            <div>Ability</div>
+                        } else
+                        {
+                            <div>Abilties</div>
+                        }
+                    </b>
+                </span>
+
+
+                <div class="box-inner" style="background-color: #FFFFFF; display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: row;">
+
+                    <div class="box-inner" style="background-color: #FFFFFF;">
+                        @(form.ability0)
+
+                        <br>
+                        @if (form.ability1 != null){
+                            @(form.ability1)
+                        }
+                    </div>
+
+
+
+
+                    @if (form.hiddenAbility != null)
+                    {
+                        <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
+                            <i style="font-size: calc(1em - 2px); ">Hidden Ability:</i>
+                            @(form.hiddenAbility)
+                        </div>
+                    }
+
+                    @if (form.specialAbility != null)
+                    {
+                        <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
+                            <i style="font-size: calc(1em - 2px); ">Special Ability:</i>
+                            @(form.specialAbility)
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+
+            <div style="padding: 3px;"></div>
+
+            <div class="box-middle" style="background-color: @(frontColour); ">
+                <span style="display: block;">
+                    <b>Stats</b>
+                </span>
+
+
+                    <div class="box-inner" style="background-color: #FFFFFF; padding-left: 4px; flex-direction: column;">
+
+                        <table style="width:100%;  font-family: inherit;">
+                            <tr>
+                                <th style="width:10%;">
+                                    <div style="font-size: calc(1em - 2px); ">Stat:</div>
+                                </th>
+                                <th style="width:10%;">
+                                    <div style="font-size: calc(1em - 2px); ">Base:</div>
+                                </th>
+                                <td style="width:60%;  font-size: calc(1em - 2px); text-align: center;">
+                                   Base Stat Total: @(form.hp + form.atk + form.def + form.spa + form.spd + form.spe)
+                                </td>
+                                <th style="width:20%; text-align: center;">
+                                    <i style="font-size: calc(1em - 2px); ">Range [lvl.100]</i>
+                                </th>
+
+                            </tr>
+
+
+
+                            <tr>
+                                <td style="width:10%;">
+                                    HP
+                                </td>
+
+                                <td style="width:10%;">
+                                    @(form.hp)
+                                </td>
+
+                                <td style="width:60%;">
+                                    <div class="box" style="border-radius: 12px; border: 1px solid grey;">
+                                        <div class="box" style="background-color: #69dc12; width: @(10 + 90*(form.hp / 255.0))%; height: 100%; border-radius: 12px;">&nbsp;</div>
+                                    </div>
+                                </td>
+
+                                <td style="width:20%; text-align: center;">
+                                    @if(form.hp != 1){
+
+                                        <div>@(Math.Floor(((2.0 * form.hp) * 100.0) / 100.0 + 100.0 + 10.0)) - @(Math.Floor(((2.0 * form.hp + 31 + (255 / 4)) * 100.0) / 100.0 + 100.0 + 10.0))</div>
+                                    } else {
+                                        <div>1 - 1</div>
+                                    }
+
+                                </td>
+
+                            </tr>
+
+
+                            @{List<(string name, int statValue, string colour)> listOfStats = new List<(string, int, string)>() 
+                                { 
+                                    ("ATK", form.atk, "#efcc18"), 
+                                    ("DEF", form.def, "#e86412"), 
+                                    ("SPA", form.spa, "#14c3f1"), 
+                                    ("SPD", form.spd, "#4a6adf"), 
+                                    ("SPE", form.spe, "#d51dad") 
+                                };
+                            }
+
+                            @foreach(var stat in listOfStats){
+
+                            <tr>
+                                <td>
+                                    @(stat.name)
+                                </td>
+                                <td>
+                                    @stat.statValue
+                                </td>
+
+                                <td style="width:60%;">
+                                    <div class="box" style="border-radius: 12px; border: 1px solid grey;">
+                                        <div class="box" style="background-color: @stat.colour; width: @(10 + 90*(stat.statValue / 255.0))%; height: 100%; border-radius: 12px;">&nbsp;</div>
+                                    </div>
+                                </td>
+
+                                <td style="width:20%; text-align: center;">
+                                    @(Math.Floor(((2.0 * stat.statValue) * 100.0) / 100.0 + 5)) - @(Math.Floor((((2.0 * stat.statValue + 31 + (255 / 4)) * 100.0) / 100.0 + 5) * 1.1))
+                                </td>
+                            </tr>
+
+                            }
+
+                        </table>
+
+
+                </div>
+            </div>
+
+            <div style="padding: 3px;"></div>
+
+            <div class="flex-container" style="display: flex; flex-direction: row; width: 100%; gap: 6px;">
+
+                <div class="box-middle" style="background-color: @(frontColour); flex-grow: 1;">
+                    <span style="display: block;">
+                        <b>
+                        @if( form.eggGroup2 == null) {
+                            <div>Egg Group</div>
+                        } else {
+                            <div>Egg Groups</div>
+                        }
+                        </b>
+                    </span>
+                        <div class="box-inner" style="background-color: #FFFFFF;">
+                            @(form.eggGroup1)@(form.eggGroup2 != null ? $", {form.eggGroup2}" : "")
+                        </div>
+                </div>
+
+                <div class="box-middle" style="background-color: @(frontColour); flex-grow: 1;">
+                    <span style="display: block;">
+                        <b>
+                            Colour
+                        </b>
+                    </span>
+                    <div class="box-inner" style="background-color: #FFFFFF; ">
+                        @(form.color)
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="padding: 3px;"></div>
+
+            <div class="box-middle" style="background-color: @(frontColour); ">
+
+                <span style="display: block;">
+                    <b>Gender Ratio</b>
+                </span>
+
+                <div class="box-inner" style="background-color: #FFFFFF; ">
+
+
+                    @if (form.genderRatio == -1)
+                    {
+                        <div>Gender Unknown</div>
+                    }
+                    else if (form.genderRatio == 1)
+                    {
+                        <div style="color: deeppink">100% female</div>
+                    }
+                    else if (form.genderRatio == 0)
+                    {
+                        <div style="color: blue">100% male</div>
+                    }
+                    else
+                    {
+                        <div style="color: deeppink">@(form.genderRatio * 100)% female, &nbsp;</div> <div style="color: blue"> @(100 - form.genderRatio * 100)% male</div>
+                    }
+
+                </div>
+            </div>
+
+            <div style="padding: 3px;"></div>
+
+            <div class="flex-container" style="display: flex; flex-direction: row; width: 100%; gap: 6px;">
+
+                <div class="box-middle" style="background-color: @(frontColour); >
+                    <span style="display: block;">
+                        <b>
+                            Height
+                        </b>
+                    </span>
+                    <div class="box-inner" style="background-color: #FFFFFF;">
+                        @(form.heightm) <i style="font-size: calc(1em - 2px); ">m</i>
+                    </div>
+                </div>
+
+                <div class="box-middle" style="background-color: @(frontColour); flex-grow: 1;">
+                    <span style="display: block;">
+                        <b>
+                            Weight
+                        </b>
+                    </span>
+                    <div class="box-inner" style="background-color: #FFFFFF;">
+                        @if (form.forme == "Gmax" || form.forme == "Gmax1" || form.forme == "Gmax2"){
+                            <i>???</i>
+                            } else {
+                                <div>@form.weightkg</div>
+                            }
+
+                         <i style="font-size: calc(1em - 2px); ">Kg</i>
+                    </div>
+                </div>
+            </div>
+
+
+    <div>
+    </div>
+        @if (form.PrevoForm != null || form.PostEvoForms.Count() != 0)
+        {
+            <div style="padding: 3px;"></div>
+            <div class="box-middle" style="background-color: @(frontColour)">
+                <b>Evolution Line</b>
+                <div class="box-middle" style="background-color: white">
+                    <div class="flex-container" style="display: flex; flex-direction: row; height: 100%; width: 100%; gap: 6px;">
+
+                        @if (form.PrevoForm != null)
+                        {
+
+                            @if (form.PrevoForm.PrevoForm != null)
+                            {
+                            <a href="/Pokemons/Forms/@(form.PrevoForm.PrevoForm.Pokemon.Id)/@CommonMethodsHelper.GetUrlFormIdFromPokemon(form.PrevoForm.PrevoForm.Pokemon, form.PrevoForm.PrevoForm)" style="color: inherit; text-decoration: none; display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                @{
+                                    var (prevoPrevoPokemonNum, prevoPrevoFormNum, prevoPrevoGenderCode, prevoPrevoBackupGenderCode, prevoPrevoGigantamax) = CommonMethodsHelper.GetImageInput(form.PrevoForm.PrevoForm.Pokemon, form.PrevoForm.PrevoForm);
+                                }
+
+                                <img src="~/images/pokemon_images/poke_capture_@(prevoPrevoPokemonNum)_@(prevoPrevoFormNum)_@(prevoPrevoGenderCode)_@(prevoPrevoGigantamax)_00000000_f_n.png"
+                                alt="type"
+                                style="width: 45%; height: auto;"
+                                onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(prevoPrevoPokemonNum)_@(prevoPrevoFormNum)_@(prevoPrevoBackupGenderCode)_@(prevoPrevoGigantamax)_00000000_f_n.png';" />
+                                            
+                                <div>@(form.PrevoForm.PrevoForm.Name)</div>
+                            </div>
+                            </a>
+
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                →
+                            </div>
+                            }
+                        }
+
+
+                        @if (form.PrevoForm != null) {
+                            <a href="/Pokemons/Forms/@(form.PrevoForm.Pokemon.Id)/@CommonMethodsHelper.GetUrlFormIdFromPokemon(form.PrevoForm.Pokemon, form.PrevoForm)" style="color: inherit; text-decoration: none; display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                @{
+                                    var (prevoPokemonNum, prevoFormNum, prevoGenderCode, prevoBackupGenderCode, prevoGigantamax) = CommonMethodsHelper.GetImageInput(form.PrevoForm.Pokemon, form.PrevoForm);
+
+                                }
+
+                                <img src="~/images/pokemon_images/poke_capture_@(prevoPokemonNum)_@(prevoFormNum)_@(prevoGenderCode)_@(prevoGigantamax)_00000000_f_n.png"
+                                    alt="type"
+                                    style="width: 45%; height: auto;"
+                                    onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(prevoPokemonNum)_@(prevoFormNum)_@(prevoBackupGenderCode)_@(prevoGigantamax)_00000000_f_n.png';" />
+                            @form.PrevoForm.Name
+                            </div>
+                            </a>
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                →
+                            </div>
+                        }
+
+
+
+                            <a href="/Pokemons/Forms/@(pokemon.Id)/@CommonMethodsHelper.GetUrlFormIdFromPokemon(pokemon, form)" style="color: inherit; text-decoration: none; display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+
+                                <img src="~/images/pokemon_images/poke_capture_@(pokemonNum)_@(formNum)_@(genderCode)_@(gigantamax)_00000000_f_n.png"
+                                        alt="type"
+                                        style="width: 45%; height: auto;"
+                                        onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(pokemonNum)_@(formNum)_@(backupGenderCode)_@(gigantamax)_00000000_f_n.png';" />
+                                <div>@(form.Name)</div>
+                            </div>
+                        </a>
+
+
+                        @if (form.PostEvoForms.Count() != 0)
+                        {
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                @foreach (var evolutionForm in form.PostEvoForms)
+                                {
+                                    <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+                                        →
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                                
+
+                        @if (form.PostEvoForms.Count() != 0)
+                        {
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                                @foreach (var evolutionForm in form.PostEvoForms)
+                                {
+                                <a href="/Pokemons/Forms/@(evolutionForm.Pokemon.Id)/@CommonMethodsHelper.GetUrlFormIdFromPokemon(evolutionForm.Pokemon, evolutionForm)" style="color: inherit; text-decoration: none; display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+
+                                    @{var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(evolutionForm.Pokemon, evolutionForm);
+
+                                    <img src="~/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoGenderCode)_@(postEvoGigantamax)_00000000_f_n.png"
+                                    alt="type"
+                                    style="width: 45%; height: auto;"
+                                    onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoBackupGenderCode)_@(postEvoGigantamax)_00000000_f_n.png';" />
+                                            
+                                    <div>@(evolutionForm.Name)</div>
+                                    }
+                                    </a>
+
+                                }
+                            </div>
+                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                                @foreach (var evolutionForm in form.PostEvoForms)
+                                {
+                                    @if (evolutionForm.PostEvoForms.Count() != 0)
+                                    {
+                                        @foreach (var evolutionEvolutionForm in evolutionForm.PostEvoForms)
+                                        {
+                                            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                                                →
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                                            &nbsp;
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+
+                            }
+
+
+
+
+                        @if (form.PostEvoForms.Count() != 0)
+                        {
+                            var evoPositionCount = 0;
+                            @foreach (var evolutionForm in form.PostEvoForms)
+                            {
+                                        
+                                @if (evolutionForm.PostEvoForms.Count() != 0)
+                                {
+                                    <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+
+                                        @foreach (var evolutionEvolutionForm in evolutionForm.PostEvoForms)
+                                        {
+                                            <div style="margin-top: auto; margin-bottom: @((evoPositionCount/form.PostEvoForms.Count())*100)%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                                @{
+                                                    var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(evolutionEvolutionForm.Pokemon, evolutionEvolutionForm);
+
+                                                    <a href="/Pokemons/Forms/@(evolutionEvolutionForm.Pokemon.Id)/@CommonMethodsHelper.GetUrlFormIdFromPokemon(evolutionEvolutionForm.Pokemon, evolutionEvolutionForm)" style="color: inherit; text-decoration: none; display: flex; flex-grow: 1; align-items: center; justify-content: center;  flex-direction: column;">
+                                                    <img src="~/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoGenderCode)_@(postEvoGigantamax)_00000000_f_n.png"
+                                                            alt="type"
+                                                            style="width: 45%; height: auto;"
+                                                            onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoBackupGenderCode)_@(postEvoGigantamax)_00000000_f_n.png';" />
+
+                                                    <div>@(evolutionEvolutionForm.Name)</div>
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                evoPositionCount = evoPositionCount + 1;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if(form.requiredItem != null || form.forme != null){
+            <div style="padding: 3px;"></div>
+
+            <div style="display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: row; width : 100%;">
+                @if(form.forme != null) {
+                <div class="box-middle" style="background-color: @(frontColour); ">
+
+                    <span style="display: block;">
+                        <b>Form Classification</b>
+                    </span>
+
+                    <div class="box-inner" style="background-color: #FFFFFF; ">
+                        @form.forme
+                    </div>
+                </div>
+                }
+
+                @if(form.requiredItem != null && form.forme != null) {
+                    <div style="padding-right: 1%;"></div>
+                }
+
+
+                @if(form.requiredItem != null) {
+
+                <div class="box-middle" style="background-color: @(frontColour); ">
+
+                    <span style="display: block;">
+                        <b>Required Item</b>
+                    </span>
+
+                    <div class="box-inner" style="background-color: #FFFFFF; ">
+                        @form.requiredItem
+                    </div>
+                </div>
+                }
+ 
+            </div>
+        }
+    </div>
+
+
+</div>

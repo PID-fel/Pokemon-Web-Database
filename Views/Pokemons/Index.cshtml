@@ -1,0 +1,69 @@
+﻿@model IEnumerable<BulbaClone.Models.Pokemon>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div style="border-radius: 10px; border: 1px solid #151515; width: 35%;">
+        <table class="table" style="">
+            <thead>
+                <tr>
+                    <th style="width: 34%; text-align: center;">
+                        Icon
+                    </th>
+
+                    <th style="width: 33%; text-align: center;">
+                        Pokemon
+                    </th>
+
+                    <th style="width: 33%; text-align: center;">
+                        Type
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pokemon in Model)
+                {
+                <tr>
+                    <td style="text-align: center;  align-content: center;">
+                        @{var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(pokemon, pokemon.Forms.FirstOrDefault());}
+                        <a href="/Pokemons/Forms/@(pokemon.Id)/0" style="color: inherit; text-decoration: none;">
+
+                            <img src="~/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoGenderCode)_@(postEvoGigantamax)_00000000_f_n.png"
+                                 alt="type"
+                                 style="width: 100%; height: auto;"
+                                 onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoBackupGenderCode)_@(postEvoGigantamax)_00000000_f_n.png';" />
+                        </a>
+                    </td>
+
+                    <td style="text-align: center;  align-content: center;">
+                        <a href="/Pokemons/Forms/@(pokemon.Id)/0" style="color: inherit; text-decoration: none;">
+                            <div style="display:flex; flex-grow:1; flex-direction: column;">
+                                <b>@pokemon.Name</b> <i>#@pokemon.Id.ToString("D4")</i>
+                            </div>
+                        </a>
+                    </td>
+
+                    <td style="text-align: center; width: 45%; align-content: center;">
+                        <div style="display:flex; flex-grow: 1; flex-direction: column; justify-content: center; align-items: center; padding:3px;">
+                            <a href="/Pokemons/index/@(pokemon.Forms.FirstOrDefault().Type1.Name)">
+                                <img src="~/images/type_images/@(pokemon.Forms.FirstOrDefault().Type1.Name).svg" alt="type" style="width:100%;" />
+                            </a>
+                            @if(pokemon.Forms.FirstOrDefault().Type2 != null) {
+                            <a href="/Pokemons/index/@(pokemon.Forms.FirstOrDefault().Type2.Name)">
+                                <img src="~/images/type_images/@(pokemon.Forms.FirstOrDefault().Type2.Name).svg" alt="type" style="width:100%;" />
+                            </a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
