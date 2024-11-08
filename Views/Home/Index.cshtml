@@ -1,8 +1,44 @@
-﻿@{
+﻿@model IEnumerable<BulbaClone.Models.PkmnType>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <div class="flex-container" style="display: flex; flex-direction: column; width: 50%; margin: 0 auto; align-items: center;">
+
+    <h1 class="display-4">Pokemon Catalogue</h1>
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%;">
+            Pokemon By Generation:
+            <div class="box-outer" style="width: 100%; border-radius: 9px; flex: 1; align-items: flex-start; display: flex; flex-direction: column;">
+                <ul style="list-style-position: outside; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+                    @for(var i = 1;i < 10;i++) {
+                    <li style="display: list-item; align-items: flex-start; justify-content: flex-start;">
+                        <a href="/Pokemons/Index/generation|@(i)" style="color: inherit; text-decoration: none;">Generation @(i)</a>
+                    </li>
+        }
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%;">
+
+
+            Pokemon By Type:
+            <div class="box-outer" style="width: 100%; border-radius: 9px; flex: 1; align-items: flex-start; display: flex; flex-direction: column;">
+
+                <ul style="list-style-position: outside; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+                    @foreach(var pkmnType in Model) {
+                    <li style="display: list-item; align-items: flex-start; justify-content: flex-start;">
+                        <a href="/Pokemons/Index/type|@(pkmnType.Name)" style="color: inherit; text-decoration: none;">@(pkmnType.Name)</a>
+                    </li>
+                    }
+                </ul>
+
+            </div>
+        </div>
+
 </div>

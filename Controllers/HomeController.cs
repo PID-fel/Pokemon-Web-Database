@@ -1,6 +1,14 @@
-using BulbaClone.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using BulbaClone.Data;
+using BulbaClone.Models;
 using System.Diagnostics;
+
 
 namespace BulbaClone.Controllers
 {
@@ -8,14 +16,20 @@ namespace BulbaClone.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
+
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var types = await _context.PkmnType.ToListAsync();
+    
+            return View(types);
         }
 
         public IActionResult Privacy()
