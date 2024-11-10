@@ -52,7 +52,6 @@ namespace BulbaClone.Controllers
                     m.Type2.Id == type.Id))
                     .OrderBy(f => f.Id);
 
-
                 return View(await forms.ToListAsync());
                 
             } else { 

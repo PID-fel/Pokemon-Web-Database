@@ -92,7 +92,7 @@ namespace BulbaClone.Controllers
 
                     } else if (segments[0] == "eggGroup"){
 
-                        var pokemonByGeneration = await _context.Pokemon
+                        var pokemonByEggGroup = await _context.Pokemon
                             .Include(f => f.Forms)
                             .ThenInclude(t => t.Type1)
                             .Include(f => f.Forms)
@@ -101,9 +101,20 @@ namespace BulbaClone.Controllers
                             m.Forms.FirstOrDefault().eggGroup1 == segments[1] ||
                             m.Forms.FirstOrDefault().eggGroup2 == (segments[1]))
                             .ToListAsync();
-                        return View(pokemonByGeneration);
+                        return View(pokemonByEggGroup);
 
-                    }
+                    }  else if (segments[0] == "color"){
+
+                        var pokemonByColor = await _context.Pokemon
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type1)
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type2)
+                            .Where(m =>
+                            m.Forms.FirstOrDefault().color == segments[1])
+                            .ToListAsync();
+                        return View(pokemonByColor);
+                    }   
                 }
             }
 
