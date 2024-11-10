@@ -20,8 +20,6 @@ namespace BulbaClone.Controllers
         }
 
         // GET: Pokemons
-        // GET: Pokemons/Index
-        // GET: Pokemons/Index/query/queryValue
         public async Task<IActionResult> Index(string? id)
         {
 

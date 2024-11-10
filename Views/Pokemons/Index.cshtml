@@ -31,12 +31,12 @@
                     <td style="text-align: center;  align-content: center;">
                         @{var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(pokemon, pokemon.Forms.FirstOrDefault());}
                         <a href="/Pokemons/Forms/@(pokemon.Id)/0" style="color: inherit; text-decoration: none;">
-
                             <img src="~/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoGenderCode)_@(postEvoGigantamax)_00000000_f_n.png"
                                  alt="type"
                                  style="width: 100%; height: auto;"
                                  onerror="this.onerror=null; this.src='/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoBackupGenderCode)_@(postEvoGigantamax)_00000000_f_n.png';" />
                         </a>
+
                     </td>
 
                     <td style="text-align: center;  align-content: center;">

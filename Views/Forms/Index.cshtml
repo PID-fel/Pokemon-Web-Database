@@ -26,9 +26,7 @@
                 @if(form.isDisplayed){
                 <tr>
                     <td style="text-align: center;  align-content: center;">
-                        @{
-        var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(form.Pokemon, form);
-}
+                        @{var (postEvoPokemonNum, postEvoFormNum, postEvoGenderCode, postEvoBackupGenderCode, postEvoGigantamax) = CommonMethodsHelper.GetImageInput(form.Pokemon, form);}
                         <a href="/Pokemons/Forms/@(form.Pokemon.Id)/@(CommonMethodsHelper.GetUrlFormIdFromPokemon(form.Pokemon,form))" style="color: inherit; text-decoration: none;">
 
                             <img src="~/images/pokemon_images/poke_capture_@(postEvoPokemonNum)_@(postEvoFormNum)_@(postEvoGenderCode)_@(postEvoGigantamax)_00000000_f_n.png"
@@ -38,8 +36,6 @@
                         </a>
                     </td>
 
-
-
                     <td style="text-align: center;  align-content: center;">
                         <a href="/Pokemons/Forms/@(form.Pokemon.Id)/@(CommonMethodsHelper.GetUrlFormIdFromPokemon(form.Pokemon, form))" style="color: inherit; text-decoration: none;">
                             <div style="display:flex; flex-grow:1; flex-direction: column;">
@@ -47,7 +43,6 @@
                             </div>
                         </a>
                     </td>
-
 
                     <td style="text-align: center; width: 45%; align-content: center;">
                         <div style="display:flex; flex-grow: 1; flex-direction: column; justify-content: center; align-items: center; padding:3px;">
