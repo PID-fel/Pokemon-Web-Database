@@ -49,11 +49,11 @@
 
                     <td style="text-align: center; width: 45%; align-content: center;">
                         <div style="display:flex; flex-grow: 1; flex-direction: column; justify-content: center; align-items: center; padding:3px;">
-                            <a href="/Pokemons/index/@(pokemon.Forms.FirstOrDefault().Type1.Name)">
+                            <a href="/Pokemons/index/type|@(pokemon.Forms.FirstOrDefault().Type1.Name)">
                                 <img src="~/images/type_images/@(pokemon.Forms.FirstOrDefault().Type1.Name).svg" alt="type" style="width:100%;" />
                             </a>
                             @if(pokemon.Forms.FirstOrDefault().Type2 != null) {
-                            <a href="/Pokemons/index/@(pokemon.Forms.FirstOrDefault().Type2.Name)">
+                            <a href="/Pokemons/index/type|@(pokemon.Forms.FirstOrDefault().Type2.Name)">
                                 <img src="~/images/type_images/@(pokemon.Forms.FirstOrDefault().Type2.Name).svg" alt="type" style="width:100%;" />
                             </a>
                             }

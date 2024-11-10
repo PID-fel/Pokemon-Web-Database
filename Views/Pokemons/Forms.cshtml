@@ -137,14 +137,14 @@
 
                 <div class="box-inner" style="background-color: #FFFFFF; ">
 
-                    <a href="/Pokemons/index/@(form.Type1.Name)" style="width: 20%; height: auto;">
+                    <a href="/Pokemons/index/type|@(form.Type1.Name)" style="width: 20%; height: auto;">
                         <img src="~/images/type_images/@(form.Type1.Name).svg" alt="type"
                                 style="width: 100%;" />
                     </a>
                     @if (form.Type2 is not null)
                     {
                         <div style="padding-right: 2%;"></div>
-                        <a href="/Pokemons/index/@(form.Type2.Name)" style="width: 20%; height: auto;">
+                        <a href="/Pokemons/index/type|@(form.Type2.Name)" style="width: 20%; height: auto;">
                             <img src = "~/images/type_images/@(form.Type2.Name).svg" alt = "type"
                                     style="width: 100%;" />
                         </a>
@@ -171,32 +171,36 @@
 
                 <div class="box-inner" style="background-color: #FFFFFF; display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: row;">
 
-                    <div class="box-inner" style="background-color: #FFFFFF;">
-                        @(form.ability0)
 
-                        <br>
+                    <div class="box-inner" style="background-color: #FFFFFF; display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
+
+                        <a href="/Pokemons/Index/ability|@(form.ability0)" style="color: inherit; text-decoration: none;">@(form.ability0)</a>
                         @if (form.ability1 != null){
-                            @(form.ability1)
+                            <a href="/Pokemons/Index/ability|@(form.ability1)" style="color: inherit; text-decoration: none;">@(form.ability1)</a>
                         }
                     </div>
 
+                    @if (form.hiddenAbility != null || form.specialAbility != null){
+                        <div class="box-inner" style="background-color: #FFFFFF; display: flex; flex-grow: 1; align-items: center; justify-content: center; flex-direction: column;">
 
-                    @if (form.hiddenAbility != null)
-                    {
-                        <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
-                            <i style="font-size: calc(1em - 2px); ">Hidden Ability:</i>
-                            @(form.hiddenAbility)
+                            @if (form.hiddenAbility != null)
+                            {
+                                <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
+                                    <i style="font-size: calc(1em - 2px); ">Hidden Ability:</i>
+                                    <a href="/Pokemons/Index/ability|@(form.hiddenAbility)" style="color: inherit; text-decoration: none;">@(form.hiddenAbility)</a>
+                                </div>
+                            }
+
+                            @if (form.specialAbility != null)
+                            {
+                                <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
+                                    <i style="font-size: calc(1em - 2px); ">Special Ability:</i>
+                                    <a href="/Pokemons/Index/ability|@(form.specialAbility)" style="color: inherit; text-decoration: none;">@(form.specialAbility)</a>
+                                </div>
+                            }
+
                         </div>
                     }
-
-                    @if (form.specialAbility != null)
-                    {
-                        <div class="box-inner" style="background-color: #FFFFFF; flex-direction: column;">
-                            <i style="font-size: calc(1em - 2px); ">Special Ability:</i>
-                            @(form.specialAbility)
-                        </div>
-                    }
-
 
                 </div>
             </div>
@@ -313,7 +317,12 @@
                         </b>
                     </span>
                         <div class="box-inner" style="background-color: #FFFFFF;">
-                            @(form.eggGroup1)@(form.eggGroup2 != null ? $", {form.eggGroup2}" : "")
+
+                            <a href="/Pokemons/Index/eggGroup|@(form.eggGroup1)" style="color: inherit; text-decoration: none;">@(form.eggGroup1)</a>
+
+                            @if(form.eggGroup2 != null){
+                                <a href="/Pokemons/Index/eggGroup|@(form.eggGroup2)" style="color: inherit; text-decoration: none;">, @(form.eggGroup2)</a>
+                            }
                         </div>
                 </div>
 

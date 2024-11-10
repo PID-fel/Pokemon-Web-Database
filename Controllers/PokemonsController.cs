@@ -22,11 +22,6 @@ namespace BulbaClone.Controllers
         // GET: Pokemons
         // GET: Pokemons/Index
         // GET: Pokemons/Index/query/queryValue
-
-
-
-
-
         public async Task<IActionResult> Index(string? id)
         {
 
@@ -51,21 +46,17 @@ namespace BulbaClone.Controllers
 
                     return NotFound();
 
-
                 } else {
 
-
                     if (segments[0] == "generation"){
-
-                    var pokemonByGeneration = await _context.Pokemon
-                        .Include(f => f.Forms)
-                        .ThenInclude(t => t.Type1)
-                        .Include(f => f.Forms)
-                        .ThenInclude(t => t.Type2)
-                        .Where(m => m.Forms.FirstOrDefault().generation == Int32.Parse(segments[1]))
-                        .ToListAsync();
+                        var pokemonByGeneration = await _context.Pokemon
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type1)
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type2)
+                            .Where(m => m.Forms.FirstOrDefault().generation == Int32.Parse(segments[1]))
+                            .ToListAsync();
                     return View(pokemonByGeneration);
-
         
                     } else if (segments[0]=="type"){
 
@@ -94,27 +85,27 @@ namespace BulbaClone.Controllers
                             .Where(m => 
                             (m.Forms.FirstOrDefault().ability1 == segments[1] || 
                              m.Forms.FirstOrDefault().ability0 == segments[1] ||
-                             m.Forms.FirstOrDefault().hiddenAbility == segments[1] ))
+                             m.Forms.FirstOrDefault().hiddenAbility == segments[1] || 
+                             m.Forms.FirstOrDefault().specialAbility == segments[1]))
                             .ToListAsync();
                         return View(pokemonsbyType);
 
                     } else if (segments[0] == "eggGroup"){
 
-                    var pokemonByGeneration = await _context.Pokemon
-                        .Include(f => f.Forms)
-                        .ThenInclude(t => t.Type1)
-                        .Include(f => f.Forms)
-                        .ThenInclude(t => t.Type2)
-                        .Where(m =>
-                        m.Forms.FirstOrDefault().eggGroup1 == segments[1] ||
-                        m.Forms.FirstOrDefault().eggGroup2 == (segments[1]))
-                        .ToListAsync();
-                    return View(pokemonByGeneration);
+                        var pokemonByGeneration = await _context.Pokemon
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type1)
+                            .Include(f => f.Forms)
+                            .ThenInclude(t => t.Type2)
+                            .Where(m =>
+                            m.Forms.FirstOrDefault().eggGroup1 == segments[1] ||
+                            m.Forms.FirstOrDefault().eggGroup2 == (segments[1]))
+                            .ToListAsync();
+                        return View(pokemonByGeneration);
 
                     }
-            
+                }
             }
-        }
 
 
         return NotFound();
@@ -259,7 +250,7 @@ namespace BulbaClone.Controllers
                 formNumber = 0;
             }
 
-#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+            #pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var pokemon = await _context.Pokemon
                 .Include(f => f.Forms)
                 .ThenInclude(t => t.Type1)
@@ -298,7 +289,7 @@ namespace BulbaClone.Controllers
 
                 .Where(m => m.Id == pokemonId)
                 .FirstOrDefaultAsync();
-#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+            #pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
 
             var previousPokemon = await _context.Pokemon

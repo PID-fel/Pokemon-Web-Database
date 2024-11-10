@@ -51,11 +51,11 @@
 
                     <td style="text-align: center; width: 45%; align-content: center;">
                         <div style="display:flex; flex-grow: 1; flex-direction: column; justify-content: center; align-items: center; padding:3px;">
-                            <a href="/Pokemons/index/@(form.Type1.Name)">
+                            <a href="/Forms/index/type|@(form.Type1.Name)">
                                 <img src="~/images/type_images/@(form.Type1.Name).svg" alt="type" style="width:100%;" />
                             </a>
                             @if(form.Type2 != null) {
-                            <a href="/Pokemons/index/@(form.Type2.Name)">
+                            <a href="/Forms/index/type|@(form.Type2.Name)">
                                 <img src="~/images/type_images/@(form.Type2.Name).svg" alt="type" style="width:100%;" />
                             </a>
         }

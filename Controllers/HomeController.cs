@@ -22,14 +22,14 @@ namespace BulbaClone.Controllers
         {
             _logger = logger;
             _context = context;
-
         }
 
         public async Task<IActionResult> Index()
         {
             var types = await _context.PkmnType.ToListAsync();
+            var eggGroups = await _context.Form.Select(o=>o.eggGroup1).Distinct().ToListAsync();
     
-            return View(types);
+            return View((types, eggGroups));
         }
 
         public IActionResult Privacy()
