@@ -22,8 +22,6 @@ namespace BulbaClone.Controllers
         // GET: Pokemons
         public async Task<IActionResult> Index(string? id)
         {
-
-
             if (id == null){
 
                 var allPokemon = await _context.Pokemon
@@ -37,8 +35,15 @@ namespace BulbaClone.Controllers
 
             } else {
 
-                var segments = id.Split('|');
+                int? generation = null;
+                string? type1Value = null;
+                string? type2Value = null;
+                string? ability = null;
+                string? eggGroup1 = null;
+                string? eggGroup2 = null;
+                string? color = null;
 
+                var segments = id.Split('|');
 
                 if (segments.Count() == 0){
 
@@ -46,73 +51,99 @@ namespace BulbaClone.Controllers
 
                 } else {
 
-                    if (segments[0] == "generation"){
-                        var pokemonByGeneration = await _context.Pokemon
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type1)
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type2)
-                            .Where(m => m.Forms.FirstOrDefault().generation == Int32.Parse(segments[1]))
-                            .ToListAsync();
-                    return View(pokemonByGeneration);
-        
-                    } else if (segments[0]=="type"){
+                foreach (var segment in segments)
+                {
+                    string attribute = segment.Split('=')[0];
+                    string value = segment.Split('=')[1];
 
-                        var type = await _context.PkmnType
-                            .Where(m => m.Name == segments[1])
-                            .FirstOrDefaultAsync();           
-            
-                        var pokemonsbyType = await _context.Pokemon
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type1)
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type2)
-                            .Where(m => 
-                            (m.Forms.FirstOrDefault().Type1.Id == type.Id || 
-                             m.Forms.FirstOrDefault().Type2.Id == type.Id))
-                            .ToListAsync();
-                        return View(pokemonsbyType);
-                             
-                    } else if (segments[0]=="ability"){        
-            
-                        var pokemonsbyType = await _context.Pokemon
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type1)
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type2)
-                            .Where(m => 
-                            (m.Forms.FirstOrDefault().ability1 == segments[1] || 
-                             m.Forms.FirstOrDefault().ability0 == segments[1] ||
-                             m.Forms.FirstOrDefault().hiddenAbility == segments[1] || 
-                             m.Forms.FirstOrDefault().specialAbility == segments[1]))
-                            .ToListAsync();
-                        return View(pokemonsbyType);
+                    if (attribute == "generation"){
+                        generation = Int32.Parse(value);
+                    } else if (attribute=="type1"){
+                        type1Value = value; 
+                    } else if (attribute=="type2"){
+                        type2Value = value; 
+                    } else if (attribute=="ability"){
+                        ability = value; 
+                    } else if (attribute=="eggGroup1"){
+                        eggGroup1 = value; 
+                    } else if (attribute=="eggGroup2"){
+                        eggGroup2 = value; 
+                    } else if (attribute=="color"){
+                        color = value; 
+                    }
+                }
+                 
+                var pokemon = await _context.Pokemon
+                    .Include(f => f.Forms)
+                    .ThenInclude(t => t.Type1)
+                    .Include(f => f.Forms)
+                    .ThenInclude(t => t.Type2)
+                    .ToListAsync();
+                    
+                if (generation != null) {
+                    pokemon = pokemon.Where(m => m.Forms.FirstOrDefault().generation == generation).ToList();
+                }
+                    
+                if ((type1Value != null && type2Value == null) || (type1Value != null && type2Value == null)) {
 
-                    } else if (segments[0] == "eggGroup"){
+                    if (type1Value == null){
+                        type1Value = type2Value;
+                    }
 
-                        var pokemonByEggGroup = await _context.Pokemon
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type1)
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type2)
-                            .Where(m =>
-                            m.Forms.FirstOrDefault().eggGroup1 == segments[1] ||
-                            m.Forms.FirstOrDefault().eggGroup2 == (segments[1]))
-                            .ToListAsync();
-                        return View(pokemonByEggGroup);
+                    var type = await _context.PkmnType
+                            .Where(m => m.Name == type1Value)
+                            .FirstOrDefaultAsync(); 
 
-                    }  else if (segments[0] == "color"){
+                    pokemon = pokemon.Where(m => m.Forms.FirstOrDefault().Type1 == type ||
+                                            m.Forms.FirstOrDefault().Type2 == type ).ToList();
 
-                        var pokemonByColor = await _context.Pokemon
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type1)
-                            .Include(f => f.Forms)
-                            .ThenInclude(t => t.Type2)
-                            .Where(m =>
-                            m.Forms.FirstOrDefault().color == segments[1])
-                            .ToListAsync();
-                        return View(pokemonByColor);
-                    }   
+                } else if (type1Value != null && type2Value != null) {
+                
+                     var type1 = await _context.PkmnType
+                                        .Where(m => m.Name == type1Value)
+                                        .FirstOrDefaultAsync(); 
+                
+                     var type2 = await _context.PkmnType
+                                        .Where(m => m.Name == type2Value)
+                                        .FirstOrDefaultAsync(); 
+
+                    pokemon = pokemon.Where(m => (m.Forms.FirstOrDefault().Type1 == type1 &&
+                                            m.Forms.FirstOrDefault().Type2 == type2) ||
+                                            (m.Forms.FirstOrDefault().Type1 == type2 &&
+                                            m.Forms.FirstOrDefault().Type2 == type1)).ToList();
+                }
+
+                if (ability != null) {
+                    pokemon = pokemon.Where(m => new[] {m.Forms.FirstOrDefault()?.ability1, m.Forms.FirstOrDefault()?.ability0, 
+                                            m.Forms.FirstOrDefault()?.hiddenAbility, m.Forms.FirstOrDefault()?.specialAbility }
+                                            .Any(a => string.Equals(a, ability, StringComparison.OrdinalIgnoreCase))).ToList();
+                }
+
+                if ((eggGroup1 != null && eggGroup2 == null) || (eggGroup1 != null && eggGroup2 == null)) {
+
+                    if (eggGroup1 == null){
+                        eggGroup1 = eggGroup2;
+                    }
+
+
+                    pokemon = pokemon.Where(m => string.Equals(m.Forms.FirstOrDefault().eggGroup1, eggGroup1, StringComparison.OrdinalIgnoreCase) ||
+                                            string.Equals(m.Forms.FirstOrDefault().eggGroup2, eggGroup1, StringComparison.OrdinalIgnoreCase)).ToList();
+                } else if (eggGroup1 != null && eggGroup1 != null) {
+
+                    pokemon = pokemon.Where( m => (string.Equals(m.Forms.FirstOrDefault().eggGroup1, eggGroup1, StringComparison.OrdinalIgnoreCase) &&
+                                                  string.Equals(m.Forms.FirstOrDefault().eggGroup2, eggGroup2, StringComparison.OrdinalIgnoreCase)) ||
+                                                  (string.Equals(m.Forms.FirstOrDefault().eggGroup1, eggGroup2, StringComparison.OrdinalIgnoreCase) &&
+                                                  string.Equals(m.Forms.FirstOrDefault().eggGroup2, eggGroup1, StringComparison.OrdinalIgnoreCase))
+                                                  ).ToList();
+
+                }
+
+                if (color != null) {
+                    pokemon = pokemon.Where(m => string.Equals(
+                            m.Forms.FirstOrDefault().color, color, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+                return View(pokemon);
                 }
             }
 
