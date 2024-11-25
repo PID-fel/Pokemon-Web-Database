@@ -22,6 +22,166 @@ namespace BulbaClone.Controllers
         // GET: Forms
         public async Task<IActionResult> Index(string? id)
         {
+            if (id == null){
+
+            var allForms = await _context.Form
+                .Include(p => p.Pokemon)
+                .Include(r => r.PrevoForm)
+                .Include(t => t.Type1)
+                .Include(t2 => t2.Type2)
+                .OrderBy(f => f.Id)
+                .ToListAsync();
+                    
+                return View(allForms);
+
+            } else {
+
+                int? generation = null;
+                string? type1Value = null;
+                string? type2Value = null;
+                string? ability = null;
+                string? eggGroup1 = null;
+                string? eggGroup2 = null;
+                string? color = null;
+                bool includeAlternateForms = true;
+
+                var segments = id.Split('|');
+
+                if (segments.Count() == 0){
+
+                    return NotFound();
+
+                } else {
+
+                foreach (var segment in segments)
+                {
+                    string attribute = segment.Split('=')[0];
+                    string value = segment.Split('=')[1];
+
+                    if (attribute == "generation"){
+                        generation = Int32.Parse(value);
+                    } else if (attribute=="type1"){
+                        type1Value = value; 
+                    } else if (attribute=="type2"){
+                        type2Value = value; 
+                    } else if (attribute=="ability"){
+                        ability = value; 
+                    } else if (attribute=="eggGroup1"){
+                        eggGroup1 = value; 
+                    } else if (attribute=="eggGroup2"){
+                        eggGroup2 = value; 
+                    } else if (attribute=="color"){
+                        color = value; 
+                    } else if (attribute=="forms"){
+                        if (string.Equals(value, "false", StringComparison.OrdinalIgnoreCase)){
+                            includeAlternateForms = false; 
+                        }
+                    }
+                }
+                 
+                var forms = await _context.Form
+                    .Include(p => p.Pokemon)
+                    .Include(r => r.PrevoForm)
+                    .Include(t => t.Type1)
+                    .Include(t2 => t2.Type2)
+                    .OrderBy(f => f.Id)
+                    .ToListAsync();
+                    
+                if (generation != null) {
+                    forms = forms.Where(m => m.generation == generation).ToList();
+                }
+                    
+                if ((type1Value != null && type2Value == null) || (type1Value != null && type2Value == null)) {
+
+                    if (type1Value == null){
+                        type1Value = type2Value;
+                    }
+
+                    var type = await _context.PkmnType
+                            .Where(m => m.Name == type1Value)
+                            .FirstOrDefaultAsync(); 
+
+                    forms = forms.Where(m => m.Type1 == type ||
+                                            m.Type2 == type ).ToList();
+
+                } else if (type1Value != null && type2Value != null) {
+                
+                     var type1 = await _context.PkmnType
+                                        .Where(m => m.Name == type1Value)
+                                        .FirstOrDefaultAsync(); 
+                
+                     var type2 = await _context.PkmnType
+                                        .Where(m => m.Name == type2Value)
+                                        .FirstOrDefaultAsync(); 
+
+                    forms = forms.Where(m => (m.Type1 == type1 &&
+                                            m.Type2 == type2) ||
+                                            (m.Type1 == type2 &&
+                                            m.Type2 == type1)).ToList();
+                }
+
+                if (ability != null) {
+                    forms = forms.Where(m => new[] {m.ability1, m.ability0, 
+                                            m.hiddenAbility, m.specialAbility }
+                                            .Any(a => string.Equals(a, ability, StringComparison.OrdinalIgnoreCase))).ToList();
+                }
+
+                if ((eggGroup1 != null && eggGroup2 == null) || (eggGroup1 != null && eggGroup2 == null)) {
+
+                    if (eggGroup1 == null){
+                        eggGroup1 = eggGroup2;
+                    }
+
+
+                    forms = forms.Where(m => string.Equals(m.eggGroup1, eggGroup1, StringComparison.OrdinalIgnoreCase) ||
+                                            string.Equals(m.eggGroup2, eggGroup1, StringComparison.OrdinalIgnoreCase)).ToList();
+                } else if (eggGroup1 != null && eggGroup1 != null) {
+
+                    forms = forms.Where( m => (string.Equals(m.eggGroup1, eggGroup1, StringComparison.OrdinalIgnoreCase) &&
+                                                  string.Equals(m.eggGroup2, eggGroup2, StringComparison.OrdinalIgnoreCase)) ||
+                                                  (string.Equals(m.eggGroup1, eggGroup2, StringComparison.OrdinalIgnoreCase) &&
+                                                  string.Equals(m.eggGroup2, eggGroup1, StringComparison.OrdinalIgnoreCase))
+                                                  ).ToList();
+
+                }
+
+                if (includeAlternateForms == false){
+
+                    forms = forms.Where( m => m.isBase == true).ToList();
+                    
+                }
+
+                if (color != null) {
+                    forms = forms.Where(m => string.Equals(
+                            m.color, color, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+
+                return View(forms);
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             if (id == null){
 

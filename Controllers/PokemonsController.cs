@@ -147,10 +147,6 @@ namespace BulbaClone.Controllers
                 }
             }
 
-
-        return NotFound();
-
-
         }
 
 
