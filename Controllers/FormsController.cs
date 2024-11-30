@@ -132,7 +132,6 @@ namespace BulbaClone.Controllers
                         eggGroup1 = eggGroup2;
                     }
 
-
                     forms = forms.Where(m => string.Equals(m.eggGroup1, eggGroup1, StringComparison.OrdinalIgnoreCase) ||
                                             string.Equals(m.eggGroup2, eggGroup1, StringComparison.OrdinalIgnoreCase)).ToList();
                 } else if (eggGroup1 != null && eggGroup1 != null) {
@@ -157,121 +156,9 @@ namespace BulbaClone.Controllers
                 }
 
                 return View(forms);
+                
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            if (id == null){
-
-                var forms = _context.Form
-                    .Include(p => p.Pokemon)
-                    .Include(r => r.PrevoForm)
-                    .Include(t => t.Type1)
-                    .Include(t2 => t2.Type2)
-                    .OrderBy(f => f.Id);
-
-                return View(await forms.ToListAsync());
-
-            } else {
-
-                var segments = id.Split('|');
-
-
-                if (segments.Count() == 0){
-
-                    return NotFound();
-
-                } else {
-
-                    if (segments[0] == "generation"){
-                        var formsByGeneration = await _context.Form
-                            .Include(p => p.Pokemon)
-                            .Include(t => t.Type1)
-                            .Include(t => t.Type2)
-                            .Where(m => m.generation == Int32.Parse(segments[1]))
-                            .ToListAsync();
-                        return View(formsByGeneration);
-        
-                    } else if (segments[0]=="type"){
-
-                        var type = await _context.PkmnType
-                            .Where(m => m.Name == segments[1])
-                            .FirstOrDefaultAsync();           
-            
-                        var formsByType = await _context.Form
-                            .Include(p => p.Pokemon)
-                            .Include(t => t.Type1)
-                            .Include(t => t.Type2)
-                            .Where(m => 
-                            (m.Type1.Id == type.Id || 
-                             m.Type2.Id == type.Id))
-                            .ToListAsync();
-                        return View(formsByType);
-                             
-                    } else if (segments[0]=="ability"){        
-            
-                        var formsByType = await _context.Form
-                            .Include(p => p.Pokemon)
-                            .Include(t => t.Type1)
-                            .Include(t => t.Type2)
-                            .Where(m => 
-                            (m.ability1 == segments[1] || 
-                             m.ability0 == segments[1] ||
-                             m.hiddenAbility == segments[1] || 
-                             m.specialAbility == segments[1]))
-                            .ToListAsync();
-                        return View(formsByType);
-
-                    } else if (segments[0] == "eggGroup"){
-
-                        var formByEggGroup = await _context.Form
-                            .Include(p => p.Pokemon)
-                            .Include(f => f.Type1)
-                            .Include(f => f.Type2)
-                            .Where(m =>
-                            m.eggGroup1 == segments[1] ||
-                            m.eggGroup2 == (segments[1]))
-                            .ToListAsync();
-                        return View(formByEggGroup);
-
-                    }  else if (segments[0] == "color"){
-
-                        var formByColor = await _context.Form
-                            .Include(p => p.Pokemon)
-                            .Include(t => t.Type1)
-                            .Include(t => t.Type2)
-                            .Where(m =>
-                            m.color == segments[1])
-                            .ToListAsync();
-                        return View(formByColor);
-                    }   
-                }
-            }
-
-
-        return NotFound();
         }
 
 

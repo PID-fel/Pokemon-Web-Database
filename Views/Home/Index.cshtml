@@ -1,4 +1,4 @@
-﻿@model ValueTuple<List<BulbaClone.Models.PkmnType>, List<string>>
+﻿@model ValueTuple<List<BulbaClone.Models.PkmnType>, List<string>, List<string>>
 
 
 
@@ -9,59 +9,139 @@
 @{
     var pokemonTypes = Model.Item1;
     var eggGroups = Model.Item2;
+    var colors = Model.Item3;
 }
+
+
+
+<script>
+    function activateLink() {
+
+        const parameters = ["generation", "type1", "type2", "eggGroup1", "eggGroup2", "color"]
+
+        var arrayQuery = [];
+
+        //var parameter = "generation"
+
+
+        for (let i = 0; i < parameters.length; i++) {
+
+            parameter = parameters[i]
+
+            if (document.getElementById(parameter).value != "any") {
+                arrayQuery.push(parameter + "=" + document.getElementById(parameter).value)
+            }
+
+        }
+
+            
+        var arrayString = arrayQuery.join('|')
+
+
+        window.location.href = 'http://localhost:5001/Forms/index/' + arrayString;
+    }
+</script>
+
+
 
 <div class="text-center">
 
-    <div class="flex-container" style="display: flex; flex-direction: column; width: 50%; margin: 0 auto; align-items: center;">
+    <div class="flex-container" style="display: flex; flex-direction: row; width: 50%; margin: 0 auto; align-items: center;">
 
-    <h1 class="display-4">Pokemon Catalogue</h1>
+        <!--
+        int? generation = null;
+        string? type1Value = null;
+        string? type2Value = null;
+        string? ability = null;
+        string? eggGroup1 = null;
+        string? eggGroup2 = null;
+        string? color = null;
+        --!>
 
-        <div class="flex-container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%;">
-            Pokemon By Generation:
-            <div class="box-outer" style="width: 100%; border-radius: 9px; flex: 1; align-items: flex-start; display: flex; flex-direction: column;">
-                <ul style="list-style-position: outside; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                    @for(var i = 1;i < 10;i++) {
-                        <li style="display: list-item; align-items: flex-start; justify-content: flex-start;">
-                            <a href="/Pokemons/Index/generation|@(i)" style="color: inherit; text-decoration: none;">Generation @(i)</a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+            <label for="generation">Generation:</label>
 
 
-        <div class="flex-container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%;">
+            <select name="generation" id="generation">
+                <option value="any">Any</option>
+                @for(var i = 1;i < 10;i++) {
 
-
-            Pokemon By Type:
-            <div class="box-outer" style="width: 100%; border-radius: 9px; flex: 1; align-items: flex-start; display: flex; flex-direction: column;">
-
-                <ul style="list-style-position: outside; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                    @foreach(var pkmnType in pokemonTypes) {
-                    <li style="display: list-item; align-items: flex-start; justify-content: flex-start;">
-                        <a href="/Pokemons/Index/type|@(pkmnType.Name)" style="color: inherit; text-decoration: none;">@(pkmnType.Name)</a>
-                    </li>
-                    }
-                </ul>
-
-            </div>
-        </div>
-
-        <div class="flex-container" style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; width: 100%;">
-
-            Pokemon By Egg Group:
-            <div class="box-outer" style="width: 100%; border-radius: 9px; flex: 1; align-items: flex-start; display: flex; flex-direction: column;">
-
-                <ul style="list-style-position: outside; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-                    @foreach(var eggGroup in eggGroups) {
-                    <li style="display: list-item; align-items: flex-start; justify-content: flex-start;">
-                        <a href="/Pokemons/Index/eggGroup|@(eggGroup)" style="color: inherit; text-decoration: none;">@(eggGroup)</a>
-                    </li>
+                    <option value="@(i)">@(i)</option>
                 }
-                </ul>
 
-            </div>
+            </select>
         </div>
+
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+
+            <label for="Type">Type:</label>
+
+            <select name="Type" id="type1">
+                <option value="any">Any</option>
+                @foreach(var pkmnType in pokemonTypes) {
+
+                            <option value="@(pkmnType.Name)">@(pkmnType.Name)</option>
+                }
+
+            </select>
+        </div>
+
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+
+            <label for="Type">Type:</label>
+
+            <select name="Type" id="type2">
+                <option value="any">Any</option>
+                @foreach(var pkmnType in pokemonTypes) {
+
+                            <option value="@(pkmnType.Name)">@(pkmnType.Name)</option>
+                }
+
+            </select>
+        </div>
+
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+
+            <label for="EggGroup">EggGroup:</label>
+
+            <select name="EggGroup" id="eggGroup1">
+            <option value="any">Any</option>
+            @foreach(var eggGroup in eggGroups) {
+                <option value="@(eggGroup)">@(eggGroup)</option>
+            }
+
+            </select>
+        </div>
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+
+            <label for="EggGroup">EggGroup:</label>
+
+            <select name="EggGroup" id="eggGroup2">
+            <option value="any">Any</option>
+            @foreach(var eggGroup in eggGroups) {
+                <option value="@(eggGroup)">@(eggGroup)</option>
+            }
+
+            </select>
+        </div>
+
+        <div class="flex-container" style="display: flex; flex-direction: column; align-items: center;">
+
+            <label for="color">Colour:</label>
+
+            <select name="color" id="color">
+            <option value="any">Any</option>
+            @foreach(var color in colors) {
+                <option value="@(color)">@(color)</option>
+            }
+
+            </select>
+        </div>
+
+        <button onclick="activateLink()">Go</button>
 
 </div>

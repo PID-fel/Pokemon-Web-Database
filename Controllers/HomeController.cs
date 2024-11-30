@@ -28,8 +28,9 @@ namespace BulbaClone.Controllers
         {
             var types = await _context.PkmnType.ToListAsync();
             var eggGroups = await _context.Form.Select(o=>o.eggGroup1).Distinct().ToListAsync();
-    
-            return View((types, eggGroups));
+            var colors = await _context.Form.Select(o=>o.color).Distinct().ToListAsync();
+
+            return View((types, eggGroups, colors));
         }
 
         public IActionResult Privacy()
